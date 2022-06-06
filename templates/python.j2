@@ -1,0 +1,51 @@
+import requests
+import time
+import warnings
+
+warnings.filterwarnings('ignore')
+
+proxies = {
+   'http': 'http://127.0.0.1:8080',
+   'https': 'http://127.0.0.1:8080',
+}
+
+{%- for request in http_requests %}
+
+# Headers
+{%- set cookie_header = request.headers.pop('cookie', None) %}
+headers = {
+{%- for header_name, header_value in request.headers.items() %}
+    '{{ header_name.replace("'","\\'") }}': '{{ header_value.replace("'","\\'") }}',
+{%- endfor %}
+}
+
+# Data
+data = r'''{{ request.data or '' }}'''
+
+# Cookies
+cookies = {
+{%- for cookie_name, cookie_value in request.cookies.items() %}
+    '{{ cookie_name.replace("'","\\'") }}': '{{ cookie_value.replace("'","\\'") }}',
+{%- endfor %}
+}
+
+# Prepare and send request
+req = requests.Request(
+    method='{{ request.command }}',
+    url='https://{{ request.host }}{{ request.path }}',
+    headers=headers,
+    data=data,
+    cookies=cookies,
+)
+prepared_req = req.prepare()
+session = requests.Session()
+session.proxies = proxies
+session.verify = False
+session.send(prepared_req)
+time.sleep(0.1)
+
+{%- endfor %}
+#resp = session.send(prepared_req)
+# print(resp.status_code)
+# print(resp.text)
+# print(resp.headers)
