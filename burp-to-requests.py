@@ -247,7 +247,7 @@ def main():
         print(colored("[+] Output file: {}".format(output_fie), "cyan"))
 
     with open(options.input_file, "r") as f:
-        soup = BeautifulSoup(f.read(), "html.parser")
+        soup = BeautifulSoup(f.read(), features="xml")
         raw_requests = soup.find_all("request")
     for i, req in enumerate(raw_requests):
         raw_requests[i] = base64.b64decode(req.text.strip()).decode('utf-8')
