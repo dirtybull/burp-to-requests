@@ -106,9 +106,9 @@ for req in http_requests:
         # Append parameters to the url
         for p in parameters:
             if "?" not in url:
-                url = "{}?{}={}".format(url, p, randint(1000, 9999))
+                url = "{}?{}=zlot{}".format(url, p, randint(1000, 9999))
             else:
-                url = "{}&{}={}".format(url, p, randint(1000, 9999))
+                url = "{}&{}=zlot{}".format(url, p, randint(1000, 9999))
 
         if url_origin != url:
             print("{}{}".format(colored("[+] Redo fetching on: ", "cyan"), url))
